@@ -77,6 +77,15 @@ class Endurance_Options {
 	}
 
 	/**
+	 * Populate all options at once.
+	 *
+	 * @param array $data
+	 */
+	public function populate( array $data ) {
+		$this->options = $data;
+	}
+
+	/**
 	 * Delete an option by name.
 	 *
 	 * @param string $name

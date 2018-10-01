@@ -7,6 +7,12 @@ add_action( 'init', 'eig_load_modules' );
  */
 function eig_load_modules() {
 	Endurance_ModuleManager::loadActiveModules();
+
+	// Read options, if module states don't match what is in database, do a write.
+	$options = eig_active_module_options();
+	$modules = Endurance_ModuleRegistry::collection()->all();
+	$options->populate( $modules );
+	$options->maybePersist();
 }
 
 /**
