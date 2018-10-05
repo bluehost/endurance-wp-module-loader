@@ -1,6 +1,6 @@
 <?php
 
-add_action( 'init', 'eig_load_modules' );
+add_action( 'after_setup_theme', 'eig_load_modules' );
 
 /**
  * Initialize the module loader.
