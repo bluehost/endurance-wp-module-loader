@@ -4,7 +4,7 @@ This loader instantiates Endurance WordPress Modules inside our WordPress Plugin
 * <a href="#endurance-wordpress-modules">What are modules?</a>
 * <a href="#creating--registering-a-module">Creating/registering modules</a>
 * <a href="#installing-from-our-satis">Installing from our Satis</a>
-* <a href="#local-development">Installing from our Satis</a>
+* <a href="#local-development">Local development notes</a>
 
 ## Endurance WordPress Modules
 Endurance WordPress Modules are PHP packages intended to be installed in WordPress Plugins via composer from our satis registry. They were first used in the Mojo Marketplace WordPress Plugin and later the Bluehost WordPress Plugin.
