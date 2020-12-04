@@ -1,19 +1,129 @@
 # Endurance WordPress Module Loader
-A component included in the Mojo Marketplace WordPress plugin which allows modules to be registered via code and enabled or disabled by users.
+This loader instantiates Endurance WordPress Modules inside our WordPress Plugins.
 
-## Registering a Module
-An Endurance module is very similar to a WordPress plugin in that you still use the normal WordPress hooks to integrate with WordPress. The primary difference is that an Endurance module registers itself with the [Mojo Marketplace WordPress plugin](https://github.com/mojoness/mojo-marketplace-wp-plugin) and can potentially be enabled/disabled from within WordPress or from the Bluehost dashboard.
+* What are modules?
+* Creating/registering modules
+* Installing from our Satis
+* Local development notes
 
-Registering a new module is as simple as calling the `eig_register_module()` function. This function takes an array of arguments:
+## Endurance WordPress Modules
+Endurance WordPress Modules are PHP packages intended to be installed in WordPress Plugins via composer from our satis registry. They were first used in the Mojo Marketplace WordPress Plugin and later the Bluehost WordPress Plugin.
 
-- **name** (required): The internal name used to reference the module. Similar to the internal name used for custom post types.
-- **label** (required): The module label shown to end users. This should be internationalized.
-- **callback** (required): The callback used to load the module when it is active.
-- **isActive** (optional): The default state of the module on a fresh plugin installation. Defaults to false (inactive).
-- **isHidden** (optional): Whether to show the plugin toggle in the admin interface. Defaults to false.
+Modules are essentially WordPress Plugins for reuse in Endurance products.
 
-All registered modules are loaded on the `init` hook with a priority of 10. Therefore, any calls to `eig_register_module()` should be made before then. The best hook to use is the `after_setup_theme` hook.  The module's registered callback function is only run if the module is enabled by the user or is set to default to an active state.
+Modules can be required/forced, optional, hidden and can be toggled by code and (sometimes) by users.
 
-The [Spam Prevention module bootstrap.php file](https://github.com/bluehost/endurance-wp-module-spam-prevention/blob/master/bootstrap.php) is a great example of how to register a module.
+## Creating & Registering a Module
 
-Internal modules used within the Mojo Marketplace WordPress plugin should live in their own GitHub repository and have a [bootstrap.php](https://github.com/bluehost/endurance-wp-module-spam-prevention/blob/master/bootstrap.php) file that handles the module registration and a [composer.json file](https://github.com/bluehost/endurance-wp-module-spam-prevention/blob/master/composer.json) that autoloads the bootstrap.php file. Internal modules are loaded into the Mojo Marketplace WordPress plugin via Composer.
+Modules will eventually be created from templates, but for now here are some key things to know.
+
+* Modules should contain a `bootstrap.php` file that is autoloaded by Composer. Functionality should load from `/inc`.
+* Modules are loaded on the `init` hook with a priority of `10`.
+* Module registration should tap the `after_setup_theme` hook.
+* In `mojoness/mojo-marketplace-wp-plugin` two constants exist for tapping the Plugin's path and base URL: `MM_BASE_DIR` and `MM_BASE_URL`. Modules are in `/vendor`.
+* In `bluehost/bluehost-wordpress-plugin` the equivalents are `BLUEHOST_PLUGIN_DIR` and `BLUEHOST_PLUGIN_URL`. Modules are in `/vendor`.
+
+### `eig_register_module()`
+
+This global function should be run during `after_theme_setup`.
+
+```php
+/**
+ * @param array $args
+ *
+ * $args = array(
+ *     'name'     => (string) **required** slug used for internal reference, like a CPT.
+ *     'label     => (string) **required** i18n display label
+ *     'callback' => (callable) **required** executed when module is active
+ *     'isActive' => (boolean) **optional, default: false** whether module is forced active by default (can be overriden if !isHidden)
+ *     'isHidden' => (boolean) **optional, default: false** whether module can be toggled in UI.
+ * )
+ */
+eig_register_module( $args );
+```
+
+Example `bootstrap.php`:
+```php
+<?php
+
+if ( function_exists( 'add_action' ) ) {
+	add_action( 'after_setup_theme', 'eig_module_spam_prevention_register' );
+}
+
+/**
+ * Register the spam prevention module
+ */
+function eig_module_spam_prevention_register() {
+	eig_register_module( array(
+		'name'     => 'spam-prevention',
+		'label'    => __( 'Spam Prevention', 'endurance' ),
+		'callback' => 'eig_module_spam_prevention_load',
+		'isActive' => true,
+	) );
+}
+
+/**
+ * Load the spam prevention module
+ */
+function eig_module_spam_prevention_load() {
+	require dirname( __FILE__ ) . '/spam-prevention.php';
+}
+```
+
+### Installing from our Satis
+
+Our modules are sourced from our 3rd-party package repository (Satis).
+
+#### 1. Make sure to register our repository in the `composer.json`
+```json
+{
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://bluehost.github.io/satis/",
+      "only": [
+        "bluehost/*",
+        "mojoness/*",
+        "endurance/*"
+      ]
+    }
+  ]
+}
+```
+
+#### 2. `composer require [satis-package-identifier]`
+
+#### 3. `composer install`
+
+### Local Development
+
+When working on modules locally:
+
+1. Clone the module repository somewhere on the filesystem, i.e. `/wp-content/modules/endurance-wp-module-awesome`.
+2. Modify the sourcing-plugin's `composer.json` to reference that directory as a `path` in the repositories array (above the satis reference).
+```json
+{
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../../modules/endurance-wp-module-awesome",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "composer",
+      "url": "https://bluehost.github.io/satis/",
+      "only": [
+        "bluehost/*",
+        "mojoness/*",
+        "endurance/*"
+      ]
+    }
+  ]
+}
+```
+3. In the `require` declaration, change the version to `@dev`
+4. `composer install`
+
+
