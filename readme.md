@@ -18,7 +18,7 @@ Modules can be required/forced, optional, hidden and can be toggled by code and 
 
 Modules will eventually be created from templates, but for now here are some key things to know.
 
-* Modules should contain a `bootstrap.php` file that is autoloaded by Composer. Functionality should load from `/inc`.
+* Modules should contain a `bootstrap.php` file that should get autoloaded by Composer. Functionality should load from `/inc`.
 * Modules are loaded on the `init` hook with a priority of `10`.
 * Module registration should tap the `after_setup_theme` hook.
 * In `mojoness/mojo-marketplace-wp-plugin` two constants exist for tapping the Plugin's path and base URL: `MM_BASE_DIR` and `MM_BASE_URL`. Modules are in `/vendor`.
@@ -133,7 +133,7 @@ When working on modules locally:
 
 0. During plugin release, a `composer install` is run, creating autoloader files and pulling in composer dependencies -- which include EIG modules.
 1. A request is made to WordPress, firing Core hooks.
-2. The plugin containing modules is loaded during `do_action('plugins_loaded')`. WordPress loads plugins alphabetically, so the plugin loads somewhere early in the sequence.
+2. The plugin containing modules is loaded during `do_action('plugins_loaded')`. WordPress loads plugins alphabetically.
 3. In the plugin, the composer autoloader is required and executes. This isn't attached to an action hook, but is effectively running during `plugins_loaded`.
 4. Each EIG module defines a bootstrap.php that is explicitly set to autoload, so when the main plugin's autoloader fires, each module's bootstrap.php is loaded -- again outside the hook cascade, but these files are effectively run during `plugins_loaded`.
 5. In the boostrap.php for each module, the module is registered with the module loader module using `eig_register_module()`. Most modules should be registered in `do_action('after_theme_setup')` and before the `do_action('init')` hook.
