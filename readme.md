@@ -5,6 +5,7 @@ This loader instantiates Endurance WordPress Modules inside our WordPress Plugin
 * <a href="#creating--registering-a-module">Creating/registering modules</a>
 * <a href="#installing-from-our-satis">Installing from our Satis</a>
 * <a href="#local-development">Local development notes</a>
+* <a href="#module-lifecycle">Understanding the module lifecycle</a>
 
 ## Endurance WordPress Modules
 Endurance WordPress Modules are PHP packages intended to be installed in WordPress Plugins via composer from our satis registry. They were first used in the Mojo Marketplace WordPress Plugin and later the Bluehost WordPress Plugin.
@@ -126,4 +127,28 @@ When working on modules locally:
 3. In the `require` declaration, change the version to `@dev`
 4. `composer install`
 
+## Understanding the module lifecycle
 
+### How It Works
+
+0. During plugin release, a `composer install` is run, creating autoloader files and pulling in composer dependencies -- which include EIG modules.
+1. A request is made to WordPress, firing Core hooks.
+2. The plugin containing modules is loaded during `do_action('plugins_loaded')`. WordPress loads plugins alphabetically, so the plugin loads somewhere early in the sequence.
+3. In the plugin, the composer autoloader is required and executes. This isn't attached to an action hook, but is effectively running during `plugins_loaded`.
+4. Each EIG module defines a bootstrap.php that is explicitly set to autoload, so when the main plugin's autoloader fires, each module's bootstrap.php is loaded -- again outside the hook cascade, but these files are effectively run during `plugins_loaded`.
+5. In the boostrap.php for each module, the module is registered with the module loader module using `eig_register_module()`. Most modules should be registered in `do_action('after_theme_setup')` and before the `do_action('init')` hook.
+6. In `bluehost/endurance-wp-module-loader`, the loader runs on `do_action('after_theme_setup')` with a priority of `100`.
+7. Any code in a module that is instantiated via `bootstrap.php` can now access the WordPress Action Hook system, starting with `init`.
+
+#### Hooks available to modules:
+* `init` (first available)
+* `wp_loaded`
+* `admin_menu`
+* `admin_init`
+* etc
+
+#### Hooks not available to modules
+* `plugins_loaded`
+* `set_current_user`
+* `setup_theme`
+* `after_theme_setup`
