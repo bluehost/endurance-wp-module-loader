@@ -76,6 +76,11 @@ function eig_module_spam_prevention_load() {
 Our modules are sourced from our 3rd-party package repository (Satis).
 
 #### 1. Make sure to register our repository in the `composer.json`
+
+Via command line: `composer config repositories.bluehost composer https://bluehost.github.io/satis`
+
+OR
+
 ```json
 {
   "repositories": [
