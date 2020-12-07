@@ -1,4 +1,11 @@
-# Endurance WordPress Module Loader
+<a href="https://endurance.com/">
+    <img src="https://bluehost.com/resources/logos/endurance.svg" alt="Endurance Logo" title="Endurance" align="right" height="42" />
+</a>
+
+# WordPress Module Loader
+[![Version Number](https://img.shields.io/github/v/release/bluehost/endurance-wp-module-loader?color=21a0ed&labelColor=333333)](https://github.com/bluehost/endurance-wp-module-loader/releases)
+[![License](https://img.shields.io/github/license/bluehost/endurance-wp-module-loader?labelColor=333333&color=666666)](https://raw.githubusercontent.com/bluehost/endurance-wp-module-loader/master/LICENSE)
+
 This loader instantiates Endurance WordPress Modules inside our WordPress Plugins.
 
 * <a href="#endurance-wordpress-modules">What are modules?</a>
@@ -8,11 +15,13 @@ This loader instantiates Endurance WordPress Modules inside our WordPress Plugin
 * <a href="#understanding-the-module-lifecycle">Understanding the module lifecycle</a>
 
 ## Endurance WordPress Modules
-Endurance WordPress Modules are PHP packages intended to be installed in WordPress Plugins via composer from our satis registry. They were first used in the Mojo Marketplace WordPress Plugin and later the Bluehost WordPress Plugin.
+Endurance WordPress Modules are PHP packages intended to be installed in WordPress Plugins via composer from our satis registry. 
 
-Modules are essentially WordPress Plugins for reuse in Endurance products.
+They were first used in the Mojo Marketplace WordPress Plugin and later the Bluehost WordPress Plugin.
 
-Modules can be required/forced, optional, hidden and can be toggled by code and (sometimes) by users.
+Modules essentially function as WordPress Plugins we can reuse in Endurance products and control programatically.
+
+Modules can be **required/forced, optional, hidden** and **can be toggled** by code and (sometimes) by users.
 
 ## Creating & Registering a Module
 
