@@ -71,4 +71,21 @@ class Endurance_ModuleManager {
 		}
 	}
 
+	/**
+	 * Report active status of specified module.
+	 * 
+	 * @param string $module name of specified module
+	 */
+	public static function isModuleActive( $module_name ) {
+
+		$activeModules = Endurance_ModuleRegistry::collection()->where( 'isActive', '===', true )->all();
+
+		foreach ( $activeModules as $name => $module ) {
+			if ( $module_name === $name ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
