@@ -75,6 +75,7 @@ class Endurance_ModuleManager {
 	 * Report active status of specified module.
 	 * 
 	 * @param string $module name of specified module
+	 * @return boolean boolean specifying if the named module is active or not
 	 */
 	public static function isModuleActive( $module_name ) {
 
