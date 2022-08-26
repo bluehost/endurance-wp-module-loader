@@ -79,6 +79,7 @@ class Endurance_Collection implements ArrayAccess, Countable, IteratorAggregate 
 	 *
 	 * @return int
 	 */
+	#[\ReturnTypeWillChange]
 	public function count() {
 		return count( $this->items );
 	}
@@ -216,6 +217,7 @@ class Endurance_Collection implements ArrayAccess, Countable, IteratorAggregate 
 	 *
 	 * @return \ArrayIterator
 	 */
+	#[\ReturnTypeWillChange]
 	public function getIterator() {
 		return new ArrayIterator( $this->items );
 	}
@@ -415,6 +417,7 @@ class Endurance_Collection implements ArrayAccess, Countable, IteratorAggregate 
 	 *
 	 * @return bool
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetExists( $key ) {
 		return array_key_exists( $key, $this->items );
 	}
@@ -426,6 +429,7 @@ class Endurance_Collection implements ArrayAccess, Countable, IteratorAggregate 
 	 *
 	 * @return mixed
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetGet( $key ) {
 		return $this->items[ $key ];
 	}
@@ -436,6 +440,7 @@ class Endurance_Collection implements ArrayAccess, Countable, IteratorAggregate 
 	 * @param mixed $key
 	 * @param mixed $value
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetSet( $key, $value ) {
 		if ( null === $key ) {
 			$this->items[] = $value;
@@ -449,6 +454,7 @@ class Endurance_Collection implements ArrayAccess, Countable, IteratorAggregate 
 	 *
 	 * @param mixed $key
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetUnset( $key ) {
 		unset( $this->items[ $key ] );
 	}
