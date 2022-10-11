@@ -3,6 +3,7 @@
   "description": "An Endurance module that handles registration and management of other modules.",
   "type": "library",
   "license": "GPL-2.0-or-later",
+  "abandoned": "newfold-labs/wp-module-loader",
   "authors": [
     {
       "name": "Micah Wood",
